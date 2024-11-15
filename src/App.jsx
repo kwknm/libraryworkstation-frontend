@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import { Layout, Space, theme, Typography } from 'antd';
 import Books from "./Pages/Books/Index";
-import Navigation from './Components/Navigation';
+import Navigation from './Components/Common/Navigation';
 import NotFound from './Pages/NotFound';
 import Home from './Pages/Home';
 import BookDetails from './Pages/Books/BookDetails';
