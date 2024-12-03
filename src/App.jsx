@@ -4,7 +4,7 @@ import {
     Routes,
     Route
 } from "react-router-dom";
-import { Layout, Space, theme, Typography } from 'antd';
+import { Image, Layout, Space, theme, Typography } from 'antd';
 import Books from "./Pages/Books/Index";
 import Navigation from './Components/Common/Navigation';
 import NotFound from './Pages/NotFound';
@@ -12,9 +12,10 @@ import Home from './Pages/Home';
 import BookDetails from './Pages/Books/BookDetails';
 import Authors from './Pages/Authors';
 import Borrowings from './Pages/Borrowings';
-import { BookTwoTone } from '@ant-design/icons';
 import Genres from './Pages/Genres';
 import Readers from './Pages/Readers';
+import Logo from "./assets/book.png"
+import ReaderDetails from './Pages/ReaderDetails';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -31,15 +32,15 @@ const App = () => {
                     justifyContent: "center"
                 }}>
                 <Link to="/">
-                    <Space>
-
-                        <BookTwoTone style={{ fontSize: '30px'}} />
-                        <Typography.Title level={5}
+                    <Space align='center'>
+                        <Image src={Logo} alt="logo" preview={false}/>
+                        <Typography.Text strong={true}
                             style={{
+                                fontSize: "20px",
                                 color: "#fff"
                             }}>
                             Система управления библиотекой
-                        </Typography.Title>
+                        </Typography.Text>
                     </Space>
                 </Link>
             </Header>
@@ -74,6 +75,7 @@ const App = () => {
                             <Route path='/borrowings' element={<Borrowings />} />
                             <Route path='/genres' element={<Genres />} />
                             <Route path='/readers' element={<Readers />} />
+                            <Route path="/readers/:id" element={<ReaderDetails />} />
                             <Route path="*" element={<NotFound />} />
                         </Routes>
                     </Content>

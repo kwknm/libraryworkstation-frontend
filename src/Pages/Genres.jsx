@@ -1,25 +1,26 @@
-import { Button, Col, Divider, Input, List, Row, Spin, Statistic } from "antd"
+import { Button, Col, Divider, Input, List, Popconfirm, Row, Spin, Statistic } from "antd"
 import { useSearchParams } from "react-router-dom";
-import {PlusOutlined} from "@ant-design/icons"
+import { PlusOutlined } from "@ant-design/icons"
 import { useState } from "react";
 import useSWR from "swr";
 import CreateGenreModal from "../Components/CreateGenreModal";
+import { Axios } from "../Api/api";
 
 const Genres = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const [searchParams, setSearchParams] = useSearchParams();
+	const [searchParams, setSearchParams] = useSearchParams();
 	const search = searchParams.get("search");
 
 	const { data, isLoading, mutate } = useSWR(search ? `/api/genres?search=${search}` : "/api/genres")
 
 	if (isLoading) {
-		return <Spin spinning size="large"/>
+		return <Spin spinning size="large" />
 	}
 
-    return (
-        <Spin tip="Loading" size="large" spinning={isLoading}>
-            <CreateGenreModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} mutate={mutate}/>
+	return (
+		<Spin tip="Loading" size="large" spinning={isLoading}>
+			<CreateGenreModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} mutate={mutate} />
 			<Row gutter={16} justify={"center"}>
 				<Col span={3}>
 					<Statistic title="Всего жанров" value={data?.length} />
@@ -46,19 +47,32 @@ const Genres = () => {
 			<Divider orientation="left" plain>
 				Список жанров:
 			</Divider>
-		
+
 			<List
-				style={{maxWidth: 600}}
-                bordered
+				style={{ maxWidth: 400 }}
+				bordered
 				dataSource={data}
 				renderItem={g => (
-					<List.Item>
+					<List.Item
+						actions={[
+							<Popconfirm
+								title="Удалить жанр"
+								description="Вы уверены?"
+								onConfirm={async () => {
+									await Axios.delete(`/api/genres/${g.id}`);
+									mutate();
+								}}
+								okText="Да"
+								cancelText="Нет">
+								<Button danger type="link">Удалить</Button>
+							</Popconfirm>
+						]}>
 						{g.name}
 					</List.Item>
 				)}
 			/>
 		</Spin>
-    )
+	)
 }
 
 export default Genres;

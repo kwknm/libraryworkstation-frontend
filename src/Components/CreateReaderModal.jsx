@@ -18,7 +18,7 @@ const CreateReaderModal = ({ isModalOpen, setIsModalOpen, mutate }) => {
     return (
         <>
             {contextHolder}
-            <Modal title="Добавление автора" open={isModalOpen} onOk={() => handleOk()} onCancel={() => setIsModalOpen(false)}>
+            <Modal title="Регистрация читателя" open={isModalOpen} onOk={() => handleOk()} onCancel={() => setIsModalOpen(false)}>
                 <Form
                     layout="vertical"
                     form={form}>

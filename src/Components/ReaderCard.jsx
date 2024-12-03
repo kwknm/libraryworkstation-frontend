@@ -1,12 +1,16 @@
 import { Button, Card, Descriptions } from "antd";
 import { Link } from "react-router-dom";
-import { Axios } from "../Api/api"
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useSWR from "swr";
 
-const ReaderCard = ({ id, firstName, patronymic, lastName, phone, joinDate, reval }) => {
+const ReaderCard = ({ id, firstName, patronymic, lastName, phone, joinDate }) => {
     const [borrowingCount, setBorrowingCount] = useState(0)
-    if (id)
-        Axios.get(`/api/readers/${id}/borrowings`).then(res => setBorrowingCount(res.data.length))
+
+    const { data: borrowings } = useSWR(`/api/readers/${id}/borrowings`, null, { revalidateOnFocus: false, revalidateIfStale: true, revalidateOnReconnect: true })
+
+    useEffect(() => {
+        setBorrowingCount(borrowings?.length || 0);
+    }, [borrowings])
 
     const items = [
         {
@@ -32,15 +36,19 @@ const ReaderCard = ({ id, firstName, patronymic, lastName, phone, joinDate, reva
     ];
 
     return (
-        <Card style={{
-            width: 500,
-        }}
+        <Card 
+            style={{
+                width: 500,
+            }}
+            extra={[
+                <Link to={`/readers/${id}`}>Подробнее</Link>
+            ]}
             actions={[
                 <Link to={`/borrowings?readerId=${id}`}><Button type="primary">Список всех выдач</Button></Link>,
                 <Link to={`/borrowings?readerId=${id}&type=overdue`}><Button type="dashed">Список задолженностей</Button></Link>,
             ]}
             title={`${firstName} ${patronymic ?? ""} ${lastName}`}
-            >
+        >
             <Descriptions column={1} items={items} />
         </Card>
     )

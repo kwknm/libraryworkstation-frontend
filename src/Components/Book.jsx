@@ -1,12 +1,12 @@
-import { Button, Card, Flex, Popconfirm, Statistic, Tag, Typography } from "antd";
+import { Button, Card, Flex, Popconfirm, Space, Statistic, Tag, Typography } from "antd";
 import { Link } from "react-router-dom";
 import BorrowingModal from "./BorrowingModal";
 import { useState } from "react";
-import axios from "axios"
+import {Axios} from "../Api/api"
 
 const Book = ({ id, title, description, isbn, availableCount, yearPublished, genres, author, mutate }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const closeModal = () => {setIsModalOpen(false)}
+    const closeModal = () => { setIsModalOpen(false) }
 
     return (
         <>
@@ -17,12 +17,14 @@ const Book = ({ id, title, description, isbn, availableCount, yearPublished, gen
                 actions={[
                     <Button type="link" disabled={availableCount === 0} onClick={() => {
                         setIsModalOpen(true);
-                    }}>Новая выдача</Button>,
+                    }}>
+                        Новая выдача
+                    </Button>,
                     <Popconfirm
                         title="Удалить книгу"
                         description="Вы уверены?"
                         onConfirm={async () => {
-                            await axios.delete(`https://localhost:7035/api/books/${id}`);
+                            await Axios.delete(`/api/books/${id}`);
                             mutate();
                         }}
                         okText="Да"
@@ -32,21 +34,21 @@ const Book = ({ id, title, description, isbn, availableCount, yearPublished, gen
                     </Popconfirm>,
                 ]}>
                 <Card.Meta
-                    title={<Link to={`/authors/${author.id}`}>{author.firstName} {author.lastName} {author?.patronymic || ""}</Link>}
+                    title={<Link to={`/books?authorId=${author.id}`}>{author.firstName} {author.lastName} {author?.patronymic || ""}</Link>}
                     description={<Typography.Paragraph
                         ellipsis={{
                             rows: 1,
-                            expandable: true,
-                            symbol: "Больше",
+                            expandable: "collapsible",
+                            symbol: "Развернуть",
                         }}
                     >
                         {description || "Нет описания."}
                     </Typography.Paragraph>} />
-                <Flex wrap gap="16px" style={{ marginTop: "15px", marginBottom: "15px" }}>
+                <Space align="center" size="large" style={{ marginTop: "15px", marginBottom: "15px" }}>
                     <Statistic title="ISBN" value={isbn} groupSeparator="" />
                     <Statistic title="В наличии" value={availableCount} suffix="шт." />
                     <Statistic title="Год публикации" value={yearPublished} groupSeparator="" />
-                </Flex>
+                </Space>
                 <Flex gap="4px 0" wrap>
                     {genres.map(genre => (
                         <Tag color="geekblue" key={genre}>{genre}</Tag>

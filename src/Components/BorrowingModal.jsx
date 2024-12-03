@@ -46,7 +46,7 @@ const BorrowingModal = ({ isModalOpen, setIsModalOpen, bookTitle, bookId, closeM
                         <Typography.Title level={4}>{bookTitle}</Typography.Title>
                     </Form.Item>
                     <Form.Item name="readerId" label="Читатель">
-                        <Select options={readers} suffixIcon={<UserOutlined />} />
+                        <Select allowClear showSearch options={readers} suffixIcon={<UserOutlined />} />
                     </Form.Item>
                     <Form.Item name="deadline" label="Крайний срок сдачи">
                         <DatePicker

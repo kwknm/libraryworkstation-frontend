@@ -1,12 +1,9 @@
 import { Col, Divider, Empty, Flex, Row, Select, Space, Spin, Statistic } from "antd"
 import { useSearchParams } from "react-router-dom";
-import { useState } from "react";
 import useSWR from "swr";
 import BorrowingCard from "../Components/BorrowingCard";
 
 const Borrowings = () => {
-    const [borrowingType, setBorrowingType] = useState("all");
-
     const [searchParams, setSearchParams] = useSearchParams();
     const readerId = searchParams.get("readerId");
     const borrowingTypeQuery = searchParams.get("type");
@@ -36,6 +33,7 @@ const Borrowings = () => {
                         allowClear
                         showSearch
                         optionFilterProp="label"
+                        defaultValue={readerId}
                         options={readers.map(x => ({ label: `${x.firstName} ${x.patronymic ?? ""} ${x.lastName}`, value: x.id }))}
                         loading={isLoading || isLoadingReaders}
                         placeholder="Фильтр выдач по читателю"
@@ -52,8 +50,8 @@ const Borrowings = () => {
                         <p>Тип выдачи</p>
                         <Select
                             style={{ minWidth: 150 }}
-                            defaultValue="all"
-                            onSelect={value => {setBorrowingType(value); console.log(borrowingType); mutate()}}
+                            defaultValue={searchParams.get("type") || "all"}
+                            onSelect={value => { setSearchParams({ "type": value }); mutate() }}
                             options={[
                                 {
                                     label: "Все",
@@ -81,7 +79,7 @@ const Borrowings = () => {
             </Divider>
 
             {
-                !borrowings?.length && <Empty/>
+                !borrowings?.length && <Empty description="Не найдено" />
             }
 
             <Flex wrap gap="large">

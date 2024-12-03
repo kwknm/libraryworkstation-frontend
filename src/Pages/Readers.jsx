@@ -1,26 +1,30 @@
 import { Button, Col, Divider, Empty, Flex, Input, Row, Spin, Statistic } from "antd"
 import { useSearchParams } from "react-router-dom";
-import {PlusOutlined} from "@ant-design/icons"
+import { PlusOutlined } from "@ant-design/icons"
 import { useState } from "react";
 import useSWR from "swr";
 import CreateReaderModal from "../Components/CreateReaderModal";
 import ReaderCard from "../Components/ReaderCard";
 
 const Readers = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const [searchParams, setSearchParams] = useSearchParams();
-	const search = searchParams.get("id");
+	const [searchParams, setSearchParams] = useSearchParams();
+	const search = searchParams.get("search");
 
-	const { data : readers, isLoading, mutate } = useSWR(search ? `/api/readers?search=${search}` : "/api/readers")
+	const params = new URLSearchParams();
+	if (search) params.append('search', search);
+	const queryString = params.toString();
 
-	if (isLoading) {
-		return <Spin spinning size="large"/>
+	const { data: readers, isLoading, isValidating, mutate } = useSWR("/api/readers?" + queryString)
+
+	if (isLoading || isValidating) {
+		return <Spin spinning size="large" />
 	}
 
-    return (
-        <Spin tip="Loading" size="large" spinning={isLoading}>
-            <CreateReaderModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} mutate={mutate}/>
+	return (
+		<Spin tip="Loading" size="large" spinning={isLoading}>
+			<CreateReaderModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} mutate={mutate} />
 			<Row gutter={16} justify={"center"}>
 				<Col span={3}>
 					<Statistic title="Всего читателей" value={readers?.length} />
@@ -47,18 +51,18 @@ const Readers = () => {
 			<Divider orientation="left" plain>
 				Список читателей:
 			</Divider>
-		
-			{
-                !readers?.length && <Empty/>
-            }
 
-            <Flex wrap gap="large">
-                {readers && readers.map(r => (
-                    <ReaderCard key={r.id} reval={mutate} {...r} />
-                ))}
-            </Flex>
+			{
+				!readers?.length && <Empty />
+			}
+
+			<Flex wrap gap="large">
+				{readers && readers.map(r => (
+					<ReaderCard key={r.id} reval={mutate} {...r} />
+				))}
+			</Flex>
 		</Spin>
-    )
+	)
 }
 
 export default Readers;

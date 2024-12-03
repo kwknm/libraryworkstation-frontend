@@ -7,7 +7,7 @@ const BorrowingCard = ({ id, reader, book, borrowedDate, deadline, returnedDate,
         {
             key: '1',
             label: 'Читатель',
-            children: <Link to={`/readers?id=${reader.id}`}>{reader.firstName} {reader.patronymic} {reader.lastName}</Link>,
+            children: <Link to={`/readers/${reader.id}`}>{reader.firstName} {reader.patronymic} {reader.lastName}</Link>,
         },
         {
             key: '2',

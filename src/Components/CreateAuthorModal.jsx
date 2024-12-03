@@ -7,7 +7,7 @@ const CreateAuthorModal = ({ isModalOpen, setIsModalOpen, mutate }) => {
 
     const handleOk = () => {
         axios.post("https://localhost:7035/api/authors", form.getFieldsValue())
-            .then(res => { console.log(res.data); mutate() })
+            .then(res => { mutate() })
             .catch(error => api.error({
                 message: "Произошла ошибка",
                 description: error.response.data?.message || `Проверьте правильность введенных данных`

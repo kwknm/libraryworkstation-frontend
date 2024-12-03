@@ -1,26 +1,22 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, useParams } from 'react-router-dom';
-import axios from 'axios';
-import { useQuery } from "@tanstack/react-query";
-import { Descriptions, Flex, Spin, Typography } from 'antd';
+import { Button, Descriptions, Flex, InputNumber, notification, Space, Spin, Typography } from 'antd';
 import Error from '../../Components/Common/Error';
+import useSWR from 'swr';
+import { Axios } from '../../Api/api';
 
 
 const BookDetails = () => {
+    const [qtyValue, setQtyValue] = useState(1);
     const { id } = useParams();
+    const { data, isLoading, error, mutate } = useSWR(`/api/books/${id}`);
+    const [api, contextHolder] = notification.useNotification();
 
-    const { isPending, isError, data, error } = useQuery({
-        refetchOnReconnect: false,
-        queryKey: ["bookDetail"],
-        queryFn: () => axios.get(`https://localhost:7035/api/books/${id}`)
-            .then(res => res.data)
-    })
-
-    if (isPending) {
+    if (isLoading) {
         return <Spin spinning size="large" />
     }
 
-    if (isError) {
+    if (error) {
         return <Error message={error.message} />
     }
 
@@ -44,40 +40,57 @@ const BookDetails = () => {
             span: 1
         },
         {
-            key: '8',
+            key: '4',
             label: 'Копий в аренде',
             children: data.borrowedBooks,
             span: 2
         },
         {
-            key: '4',
+            key: '5',
             label: 'Автор',
-            children: <Link to={`/authors/${data.author.id}`}>{data.author.firstName} {data.author.lastName} {data.author?.patronymic || ""}</Link>,
+            children: <Link to={`/books?authorId=${data.author.id}`}>{data.author.firstName} {data.author.lastName} {data.author?.patronymic || ""}</Link>,
         },
         {
-            key: '5',
+            key: '6',
             label: 'Жанры',
             children: data.genres.join(", "),
             span: 2
         },
         {
-            key: '6',
+            key: '7',
             label: 'ISBN',
             children: data.isbn,
         },
         {
-            key: '7',
+            key: '8',
             label: 'Год публикации',
             children: data.yearPublished,
         },
-        
     ]
 
     return (
+        <>
+        {contextHolder}
         <Flex justify='center' vertical>
             <Typography.Text>Сведения о книге</Typography.Text>
-            <Descriptions title={<Typography.Title level={3}>{data.title}</Typography.Title>} bordered items={items} />
+            <Descriptions
+                extra={[
+                    <Space direction='vertical'>
+                        <InputNumber style={{ maxWidth: 160 }} addonAfter="шт." defaultValue={qtyValue} onChange={value => setQtyValue(value)} />
+                        <Button type="primary" onClick={async () => {
+                            try {
+                                await Axios.post(`/api/books/${id}/replenish?qty=${qtyValue}`);
+                                api.success({message: "Успех", description: `Наличие успешно пополнено на ${qtyValue}`, placement: "topLeft"})
+                            } catch(e) {
+                                api.error({message: "Ошибка", description: `Произошла неизвестная ошибка ${error}`, placement: "topLeft"})
+                            }
+                            mutate();
+                        }}>Пополнить наличие</Button>
+                    </Space>
+                ]}
+                title={<Typography.Title level={3}>{data.title}</Typography.Title>} bordered items={items} />
         </Flex>
+        </>
     )
 }
 
