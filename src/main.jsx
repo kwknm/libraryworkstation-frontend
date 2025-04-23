@@ -18,7 +18,6 @@ root.render(
         <ConfigProvider locale={ruRU} theme={{
             algorithm: theme.darkAlgorithm,
             token: {
-                "wireframe": true,
                 "colorPrimary": "#6a00ff",
                 "colorInfo": "#6a00ff"
             }

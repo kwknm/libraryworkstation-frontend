@@ -28,7 +28,7 @@ const Borrowings = () => {
                 <Col span={3}>
                     <Statistic title="Найдено выдач" value={borrowings?.length} />
                 </Col>
-                <Col span={4}>
+                <Col span={5}>
                     <Select
                         allowClear
                         showSearch

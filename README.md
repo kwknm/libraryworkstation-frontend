@@ -1,8 +1,16 @@
-# React + Vite
+# Автоматизированное рабочее место библиотекаря
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Фронтенд для проекта практики
 
-Currently, two official plugins are available:
+_Ветка "vite" является предпочтительной_
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+[Backend этого приложения](https://github.com/kwknm/libraryworkstation-backend)
+
+## Скриншоты
+
+![home](./github-content/home.png)
+![books](./github-content/books.png)
+![readers](./github-content/readers.png)
+![borrowings](./github-content/borrowings.png)
+![authors](./github-content/authors.png)
+![genres](./github-content/genres.png)

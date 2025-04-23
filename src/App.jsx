@@ -15,6 +15,8 @@ import Borrowings from './Pages/Borrowings';
 import Genres from './Pages/Genres';
 import Readers from './Pages/Readers';
 import ReaderDetails from './Pages/ReaderDetails';
+import BookLogo from './assets/book.svg?react'
+import Icon from "@ant-design/icons";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -29,13 +31,14 @@ const App = () => {
                     display: 'flex',
                     backgroundColor: "#141414",
                     alignItems: 'center',
-                    justifyContent: "center"
+                    justifyContent: "left"
                 }}>
                 <Link to="/">
-                    <Space align='center'>
-                        <Typography.Text strong={true}
+                    <Space align='center' style={{display: 'flex', justifyContent: 'center' }}>
+                        <Icon component={BookLogo} style={{fontSize: '48px', color: 'white', verticalAlign: 'middle',}} />
+                        <Typography.Text strong={false}
                             style={{
-                                fontSize: "20px",
+                                fontSize: "22px",
                                 color: "#fff"
                             }}>
                             АРМ Библиотекаря

@@ -37,12 +37,12 @@ const BorrowingCard = ({ id, reader, book, borrowedDate, deadline, returnedDate,
 
     return (
         <Card style={{
-            width: 500,
+            width: 440,
         }}
             actions={[
                 !returnedDate ? <Button onClick={async () => {await returnBook(id); reval()}} type="primary">Закрыть выдачу</Button> : <Button type="dashed" disabled>Выдача закрыта</Button>
             ]}
-            title={`Информация о выдаче #${id.substring(0, 8)}`}
+            title={`Выдача #${id.substring(0, 8)}`}
             extra={returnedDate && `закрыта спустя ${Math.abs(new Date(returnedDate) - new Date(borrowedDate)) / (1000 * 60 * 60 * 24)} дней`}>
             <Descriptions column={1} items={items} />
         </Card>
